@@ -9,25 +9,39 @@
 <p>Bienvenue dans ma collection personnelle.</p>
 <div id="collection">Chargement de ma collection...</div>
 <script>
-fetch("collection-recap.csv")
-.then(response => response.text())
-.then(data => {
-const lignes = data.split(/\r?\n/).slice(2, 7);
-let affichage = "<h2>Mes 5 premiers éléments</h2>";
-lignes.forEach(ligne => {
-const artiste = ligne.split(",")[0];
-const titreTrouve = ligne.match(/^([^,]*),(?:"([^"]*)"|([^,]*))/);
-const titre = titreTrouve ? (titreTrouve[2] || titreTrouve[3]) : "";
-const statut = ligne.includes("✅ *2") ? "✅ 2 exemplaires" : ligne.includes("✅") ? "✅ Dans ma collection" : ligne.includes("❌") ? "❌ Recherché" : "";
-affichage += "<hr><h3>" + artiste + "</h3>";
-affichage += "<p><strong>" + titre + "</strong></p>";
-affichage += "<p>" + statut + "</p>";
-});  
-document.getElementById("collection").innerHTML = affichage;
-})
-.catch(error => {
-document.getElementById("collection").innerHTML = "❌ Impossible de lire la collection.";
-});
-</script>  
+function lireCSV(texte) {
+const lignes = [];
+let ligne = [];
+let cellule = "";
+let guillemets = false;
+for (let i = 0; i < texte.length; i++) {
+const caractere = texte[i];
+if (caractere === '"') {
+if (guillemets && texte[i + 1] === '"') {
+cellule += '"';
+i++;
+} else {
+guillemets = !guillemets;
+}
+} else if (caractere === "," && !guillemets) {
+ligne.push(cellule);
+cellule = "";
+} else if ((caractere === "\n" || caractere === "\r") && !guillemets) {
+if (caractere === "\r" && texte[i + 1] === "\n") i++;
+ligne.push(cellule);
+if (ligne.some(valeur => valeur !== "")) lignes.push(ligne);
+ligne = [];
+cellule = "";
+} else {
+cellule += caractere;
+}  
+}
+if (cellule !== "" || ligne.length > 0) {
+ligne.push(cellule);
+lignes.push(ligne);
+}
+return lignes;
+}
+/script>
 </body>
 </html>
