@@ -42,6 +42,36 @@ lignes.push(ligne);
 }
 return lignes;
 }
+etch("collection-recap.csv")
+.then(response => response.text())
+.then(texte => {
+const lignes = lireCSV(texte);
+const entetes = lignes[0];
+const donnees = lignes.slice(1, 6);
+const formats = ["Vinyle 33 tours", "CD\nAlbum", "Vinyle 45 tours", "Single", "DVD", "Livres", "Magazine", "Autres format"];
+let affichage = "<h2>Mes 5 premiers éléments</h2>";
+donnees.forEach(element => {
+const artiste = element[0] || "";
+const titre = element[1] || "";
+let detailsFormats = [];
+formats.forEach(format => {
+const position = entetes.indexOf(format);
+if (position !== -1 && element[position]) {  
+detailsFormats.push(format.replace("\n", " ") + " : " + element[position]);
+}
+});
+const observation = element[10] || "";
+affichage += "<hr>";
+affichage += "<h3>" + artiste + "</h3>";
+affichage += "<p><strong>" + titre + "</strong></p>";
+detailsFormats.forEach(detail => { affichage += "<p>" + detail + "</p>"; });
+if (observation) affichage += "<p>📝 " + observation + "</p>";  
+});
+document.getElementById("collection").innerHTML = affichage;
+})
+.catch(error => {
+document.getElementById("collection").innerHTML = "❌ Impossible de lire la collection.";
+});  
 /script>
 </body>
 </html>
