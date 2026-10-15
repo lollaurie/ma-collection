@@ -8,5 +8,15 @@
 <h1>Ma collection</h1>
 <p>Bienvenue dans ma collection personnelle.</p>
 <div id="collection">Chargement de ma collection...</div>
+<script>
+fetch("collection-recap.csv")
+.then(response => response.text())
+.then(data => {
+document.getElementById("collection").innerHTML = "✅ Le fichier de ma collection est accessible.";
+})
+.catch(error => {
+document.getElementById("collection").innerHTML = "❌ Le fichier de ma collection n'est pas accessible.";
+});
+/script>
 </body>
 </html>
