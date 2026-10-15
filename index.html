@@ -42,7 +42,7 @@ lignes.push(ligne);
 }
 return lignes;
 }
-etch("collection-recap.csv")
+fetch("collection-recap.csv")
 .then(response => response.text())
 .then(texte => {
 const lignes = lireCSV(texte);
