@@ -12,17 +12,22 @@
 fetch("collection-recap.csv")
 .then(response => response.text())
 .then(data => {
-const lignes = data.split(/\r?\n/);
-const cinqPremiers = lignes.slice(1, 6);
+const lignes = data.split(/\r?\n/).slice(2, 7);
 let affichage = "<h2>Mes 5 premiers éléments</h2>";
-cinqPremiers.forEach(ligne => {
-affichage += "<p>" + ligne + "</p>";
-});
+lignes.forEach(ligne => {
+const artiste = ligne.split(",")[0];
+const titreTrouve = ligne.match(/^([^,]*),(?:"([^"]*)"|([^,]*))/);
+const titre = titreTrouve ? (titreTrouve[2] || titreTrouve[3]) : "";
+const statut = ligne.includes("✅ *2") ? "✅ 2 exemplaires" : ligne.includes("✅") ? "✅ Dans ma collection" : ligne.includes("❌") ? "❌ Recherché" : "";
+affichage += "<hr><h3>" + artiste + "</h3>";
+affichage += "<p><strong>" + titre + "</strong></p>";
+affichage += "<p>" + statut + "</p>";
+});  
 document.getElementById("collection").innerHTML = affichage;
 })
 .catch(error => {
 document.getElementById("collection").innerHTML = "❌ Impossible de lire la collection.";
 });
-</script>
+</script>  
 </body>
 </html>
