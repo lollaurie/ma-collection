@@ -17,7 +17,7 @@ fetch("collection-recap.csv")
 const lignes = data.split(/\r?\n/);
 const collection = document.getElementById("collection");
 collection.innerHTML = "";
-lignes.slice(1, 6).forEach(ligne => {
+lignes.slice(2, 7).forEach(ligne => {
 const colonnes = ligne.split(",");
 const artiste = colonnes[0];
 const titre = colonnes[1];
