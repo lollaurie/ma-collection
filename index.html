@@ -9,7 +9,20 @@
 <p>Bienvenue dans ma collection personnelle.</p>
 <div id="collection">Chargement de ma collection...</div>
 <script>
-document.getElementById("collection").innerHTML = "✅ JavaScript fonctionne !";
+fetch("collection-recap.csv")
+.then(response => response.text())
+.then(data => {
+const lignes = data.split(/\r?\n/);
+const cinqPremiers = lignes.slice(1, 6);
+let affichage = "<h2>Mes 5 premiers éléments</h2>";
+cinqPremiers.forEach(ligne => {
+affichage += "<p>" + ligne + "</p>";
+});
+document.getElementById("collection").innerHTML = affichage;
+})
+.catch(error => {
+document.getElementById("collection").innerHTML = "❌ Impossible de lire la collection.";
+});
 </script>
 </body>
 </html>
